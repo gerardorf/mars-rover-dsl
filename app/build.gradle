@@ -19,6 +19,10 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    spek_version = "2.0.17"
+}
+
 dependencies {
     // Align versions of all Kotlin components
     implementation platform('org.jetbrains.kotlin:kotlin-bom')
@@ -32,11 +36,24 @@ dependencies {
     // Use the Kotlin test library.
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 
-    // Use the Kotlin JUnit integration.
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+    // Deleted because version incompatibility
+//    // Use the Kotlin JUnit integration.
+//    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+
+    testImplementation "org.spekframework.spek2:spek-dsl-jvm:$spek_version"
+    testRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:$spek_version"
+
+    // spek requires kotlin-reflect, can be omitted if already in the classpath
+    testRuntimeOnly "org.jetbrains.kotlin:kotlin-reflect"
 }
 
 application {
     // Define the main class for the application.
     mainClass = 'me.gerardorf.rover.AppKt'
+}
+
+test {
+    useJUnitPlatform {
+        includeEngines 'spek2'
+    }
 }
